@@ -39,6 +39,10 @@ jobs:
     - name: Sync Capacitor
       run: npx cap sync android
     
+    - name: Set portrait orientation in AndroidManifest
+      run: |
+        sed -i 's/android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"/android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"\n        android:screenOrientation="portrait"/' android/app/src/main/AndroidManifest.xml
+    
     - name: Grant execute permission for gradlew
       run: chmod +x android/gradlew
     
