@@ -1,0 +1,35 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="100" fill="#020617"/>
+  <rect x="40" y="40" width="432" height="432" rx="60" fill="url(#gradient)"/>
+  
+  <!-- Number Line -->
+  <line x1="100" y1="256" x2="412" y2="256" stroke="#475569" stroke-width="4"/>
+  
+  <!-- Tick Marks -->
+  <line x1="156" y1="236" x2="156" y2="276" stroke="#64748b" stroke-width="2"/>
+  <line x1="212" y1="241" x2="212" y2="271" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="268" y1="241" x2="268" y2="271" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="324" y1="241" x2="324" y2="271" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="380" y1="236" x2="380" y2="276" stroke="#64748b" stroke-width="2"/>
+  
+  <!-- Center Tick (Zero) -->
+  <line x1="256" y1="226" x2="256" y2="286" stroke="#06b6d4" stroke-width="3">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+  </line>
+  <circle cx="256" cy="256" r="8" fill="#06b6d4">
+    <animate attributeName="r" values="6;10;6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Numbers -->
+  <text x="156" y="310" fill="#94a3b8" font-size="28" font-family="system-ui" text-anchor="middle" font-weight="500">-5</text>
+  <text x="256" y="310" fill="#06b6d4" font-size="32" font-family="system-ui" text-anchor="middle" font-weight="600">0</text>
+  <text x="356" y="310" fill="#94a3b8" font-size="28" font-family="system-ui" text-anchor="middle" font-weight="500">5</text>
+  
+  <defs>
+    <linearGradient id="gradient" x1="256" y1="40" x2="256" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+</svg>
+

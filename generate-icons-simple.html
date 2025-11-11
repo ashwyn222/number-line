@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate PWA Icons</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+    h1 { color: #06b6d4; }
+    .canvas-container {
+      display: flex;
+      gap: 20px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    canvas {
+      border: 2px solid #334155;
+      border-radius: 8px;
+    }
+    button {
+      background: #06b6d4;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      margin: 5px;
+    }
+    button:hover {
+      background: #0891b2;
+    }
+    .instructions {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #06b6d4;
+    }
+    .success {
+      color: #10b981;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>PWA Icon Generator</h1>
+  
+  <div class="instructions">
+    <h3>Instructions:</h3>
+    <ol>
+      <li>Click "Generate Icons" below</li>
+      <li>Right-click on each canvas image</li>
+      <li>Select "Save Image As..."</li>
+      <li>Save as <code>icon-192.png</code> and <code>icon-512.png</code> in the <code>public/</code> folder</li>
+    </ol>
+  </div>
+
+  <button onclick="generateIcons()">Generate Icons</button>
+  
+  <div class="canvas-container" id="canvasContainer"></div>
+  <div id="message"></div>
+
+  <script>
+    function generateIcons() {
+      const container = document.getElementById('canvasContainer');
+      container.innerHTML = '';
+      
+      // Generate 192x192
+      createIcon(192);
+      // Generate 512x512
+      createIcon(512);
+      
+      document.getElementById('message').innerHTML = 
+        '<div class="success">✓ Icons generated! Right-click on each canvas to save.</div>';
+    }
+
+    function createIcon(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      // Background
+      const gradient = ctx.createLinearGradient(0, 0, 0, size);
+      gradient.addColorStop(0, '#0f172a');
+      gradient.addColorStop(1, '#020617');
+      
+      // Rounded rectangle background
+      ctx.fillStyle = '#020617';
+      roundRect(ctx, 0, 0, size, size, size * 0.2);
+      ctx.fill();
+      
+      ctx.fillStyle = gradient;
+      roundRect(ctx, size * 0.08, size * 0.08, size * 0.84, size * 0.84, size * 0.12);
+      ctx.fill();
+      
+      // Number line
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = size * 0.008;
+      ctx.beginPath();
+      ctx.moveTo(size * 0.2, size * 0.5);
+      ctx.lineTo(size * 0.8, size * 0.5);
+      ctx.stroke();
+      
+      // Tick marks
+      const tickPositions = [0.3, 0.4, 0.5, 0.6, 0.7];
+      const tickHeights = [0.08, 0.05, 0.08, 0.05, 0.08];
+      
+      tickPositions.forEach((pos, i) => {
+        const x = size * pos;
+        const height = size * tickHeights[i];
+        
+        if (i === 2) { // Center tick (zero)
+          ctx.strokeStyle = '#06b6d4';
+          ctx.lineWidth = size * 0.006;
+          
+          // Draw glowing center line
+          ctx.shadowColor = '#06b6d4';
+          ctx.shadowBlur = size * 0.02;
+          ctx.beginPath();
+          ctx.moveTo(x, size * 0.5 - height * 0.7);
+          ctx.lineTo(x, size * 0.5 + height * 0.7);
+          ctx.stroke();
+          
+          // Center dot
+          ctx.fillStyle = '#06b6d4';
+          ctx.shadowBlur = size * 0.03;
+          ctx.beginPath();
+          ctx.arc(x, size * 0.5, size * 0.015, 0, Math.PI * 2);
+          ctx.fill();
+          
+          ctx.shadowBlur = 0;
+        } else {
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = size * 0.003;
+          ctx.beginPath();
+          ctx.moveTo(x, size * 0.5 - height / 2);
+          ctx.lineTo(x, size * 0.5 + height / 2);
+          ctx.stroke();
+        }
+      });
+      
+      // Numbers
+      ctx.shadowBlur = 0;
+      ctx.font = `${size * 0.055}px system-ui, -apple-system, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('-5', size * 0.3, size * 0.58);
+      ctx.fillText('5', size * 0.7, size * 0.58);
+      
+      ctx.fillStyle = '#06b6d4';
+      ctx.font = `600 ${size * 0.065}px system-ui, -apple-system, sans-serif`;
+      ctx.shadowColor = '#06b6d4';
+      ctx.shadowBlur = size * 0.012;
+      ctx.fillText('0', size * 0.5, size * 0.58);
+      
+      // Add to container
+      const container = document.getElementById('canvasContainer');
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = `<h3>${size}×${size}</h3>`;
+      wrapper.appendChild(canvas);
+      container.appendChild(wrapper);
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+  </script>
+</body>
+</html>
+
