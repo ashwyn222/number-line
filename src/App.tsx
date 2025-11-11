@@ -25,8 +25,20 @@ export default function App() {
 
   const currentZoomLevel = ZOOM_LEVELS[zoomLevelIndex];
   const scale = currentZoomLevel.scale;
-
-  const BASE_PIXELS_PER_UNIT = 60; // base pixels between each integer
+  
+  // Responsive base unit: smaller on mobile, normal on tablet/desktop
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Mobile if width < 768px
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  const BASE_PIXELS_PER_UNIT = isMobile ? 40 : 60; // 40px on mobile, 60px on desktop
   const PIXELS_PER_UNIT = BASE_PIXELS_PER_UNIT * scale;
   const VIEWPORT_PADDING = 5;
 
@@ -298,7 +310,7 @@ export default function App() {
       // Major ticks have labels, minor ticks don't
       // At decimal zoom, whole numbers are major ticks
       const isMajor = isDecimalZoom ? isWholeNumber : shouldShowLabel;
-      const height = isMajor ? 40 : 20;
+      const height = isMajor ? (isMobile ? 30 : 40) : (isMobile ? 15 : 20);
 
       // Calculate fade based on distance from viewport edges
       const viewportWidth = containerRef.current?.offsetWidth || 0;
@@ -327,10 +339,10 @@ export default function App() {
             y1={-height / 2}
             x2={x}
             y2={height / 2}
-            stroke={isCenter ? "#06b6d4" : "#64748b"}
+            stroke={isCenter ? "#fbbf24" : "#64748b"}
             strokeWidth={isMajor ? 2 : 1}
             className={
-              isCenter ? "drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" : ""
+              isCenter ? "drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" : ""
             }
           />
 
@@ -338,12 +350,16 @@ export default function App() {
           {shouldShowLabel && (
             <text
               x={x}
-              y={height / 2 + 25}
+              y={height / 2 + (isMobile ? 20 : 25)}
               textAnchor="middle"
-              fill={isCenter ? "#06b6d4" : "#94a3b8"}
-              fontSize={isDecimalZoom && !isWholeNumber ? "11" : "14"}
+              fill={isCenter ? "#fbbf24" : "#94a3b8"}
+              fontSize={
+                isMobile 
+                  ? (isDecimalZoom && !isWholeNumber ? "10" : "12")
+                  : (isDecimalZoom && !isWholeNumber ? "11" : "14")
+              }
               className={
-                isCenter ? "drop-shadow-[0_0_6px_rgba(6,182,212,0.6)]" : ""
+                isCenter ? "drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]" : ""
               }
               style={{ userSelect: "none" }}
             >
