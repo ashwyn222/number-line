@@ -39,14 +39,22 @@ jobs:
     - name: Sync Capacitor
       run: npx cap sync android
     
-    - name: Set portrait orientation in AndroidManifest
+    - name: Set landscape orientation in AndroidManifest
       run: |
-        sed -i 's/android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"/android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"\n        android:screenOrientation="portrait"/' android/app/src/main/AndroidManifest.xml
+        sed -i 's/android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"/android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"\n        android:screenOrientation="landscape"/' android/app/src/main/AndroidManifest.xml
     
     - name: Copy app icons to Android
       run: |
         # Install ImageMagick for icon conversion
         sudo apt-get update && sudo apt-get install -y imagemagick
+        
+        # Remove existing icons and create directories
+        rm -rf android/app/src/main/res/mipmap-*
+        mkdir -p android/app/src/main/res/mipmap-mdpi
+        mkdir -p android/app/src/main/res/mipmap-hdpi
+        mkdir -p android/app/src/main/res/mipmap-xhdpi
+        mkdir -p android/app/src/main/res/mipmap-xxhdpi
+        mkdir -p android/app/src/main/res/mipmap-xxxhdpi
         
         # Create different resolution icons for Android
         convert public/icon-512.png -resize 48x48 android/app/src/main/res/mipmap-mdpi/ic_launcher.png
@@ -54,6 +62,16 @@ jobs:
         convert public/icon-512.png -resize 96x96 android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
         convert public/icon-512.png -resize 144x144 android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
         convert public/icon-512.png -resize 192x192 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+        
+        # Also create round icons
+        convert public/icon-512.png -resize 48x48 android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+        convert public/icon-512.png -resize 72x72 android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+        convert public/icon-512.png -resize 96x96 android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+        convert public/icon-512.png -resize 144x144 android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+        convert public/icon-512.png -resize 192x192 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+        
+        # List created icons for verification
+        find android/app/src/main/res/mipmap-* -name "ic_launcher*.png"
     
     - name: Grant execute permission for gradlew
       run: chmod +x android/gradlew
