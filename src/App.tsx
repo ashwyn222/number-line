@@ -25,19 +25,19 @@ export default function App() {
 
   const currentZoomLevel = ZOOM_LEVELS[zoomLevelIndex];
   const scale = currentZoomLevel.scale;
-  
+
   // Responsive base unit: smaller on mobile, normal on tablet/desktop
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768); // Mobile if width < 768px
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
-  
+
   const BASE_PIXELS_PER_UNIT = isMobile ? 40 : 60; // 40px on mobile, 60px on desktop
   const PIXELS_PER_UNIT = BASE_PIXELS_PER_UNIT * scale;
   const VIEWPORT_PADDING = 5;
@@ -310,7 +310,7 @@ export default function App() {
       // Major ticks have labels, minor ticks don't
       // At decimal zoom, whole numbers are major ticks
       const isMajor = isDecimalZoom ? isWholeNumber : shouldShowLabel;
-      const height = isMajor ? (isMobile ? 30 : 40) : (isMobile ? 15 : 20);
+      const height = isMajor ? (isMobile ? 30 : 40) : isMobile ? 15 : 20;
 
       // Calculate fade based on distance from viewport edges
       const viewportWidth = containerRef.current?.offsetWidth || 0;
@@ -354,9 +354,13 @@ export default function App() {
               textAnchor="middle"
               fill={isCenter ? "#fbbf24" : "#94a3b8"}
               fontSize={
-                isMobile 
-                  ? (isDecimalZoom && !isWholeNumber ? "10" : "12")
-                  : (isDecimalZoom && !isWholeNumber ? "11" : "14")
+                isMobile
+                  ? isDecimalZoom && !isWholeNumber
+                    ? "10"
+                    : "12"
+                  : isDecimalZoom && !isWholeNumber
+                  ? "11"
+                  : "14"
               }
               className={
                 isCenter ? "drop-shadow-[0_0_6px_rgba(251,191,36,0.6)]" : ""
@@ -391,7 +395,12 @@ export default function App() {
     <div className="h-screen bg-gradient-to-b from-slate-950 to-slate-900 flex flex-col overflow-hidden">
       {/* App Bar */}
       <div className="bg-slate-950/50 backdrop-blur-sm border-b border-slate-800 px-4 py-4 md:px-6 md:py-5">
-        <div className="flex items-center mx-auto">
+        <div className="flex items-center gap-3 mx-auto">
+          <img 
+            src="/icon-192.png" 
+            alt="Number Line" 
+            className="w-8 h-8 md:w-10 md:h-10"
+          />
           <h1
             className="text-slate-100 tracking-tight"
             style={{
