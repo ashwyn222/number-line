@@ -432,9 +432,9 @@ export default function App() {
           {/* Main horizontal line */}
           <line
             x1="0"
-            y1="45%"
+            y1="35%"
             x2="100%"
-            y2="45%"
+            y2="35%"
             stroke="#475569"
             strokeWidth="2"
             className="drop-shadow-[0_0_4px_rgba(71,85,105,0.5)]"
@@ -443,7 +443,9 @@ export default function App() {
           {/* Tick marks and labels */}
           <g
             transform={`translate(0, ${
-              containerRef.current ? containerRef.current.offsetHeight * 0.45 : 0
+              containerRef.current
+                ? containerRef.current.offsetHeight * 0.35
+                : 0
             })`}
           >
             {renderTicks()}
