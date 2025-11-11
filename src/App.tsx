@@ -396,9 +396,9 @@ export default function App() {
       {/* App Bar */}
       <div className="bg-slate-950/50 backdrop-blur-sm border-b border-slate-800 px-4 py-4 md:px-6 md:py-5">
         <div className="flex items-center gap-3 mx-auto">
-          <img 
-            src="/icon-192.png" 
-            alt="Number Line" 
+          <img
+            src="/icon-192.png"
+            alt="Number Line"
             className="w-8 h-8 md:w-10 md:h-10"
           />
           <h1
